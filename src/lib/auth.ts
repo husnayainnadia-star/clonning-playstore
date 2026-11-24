@@ -12,6 +12,11 @@ const loginSchema = z.object({
   password: z.string().min(6),
 });
 
+const authSecret =
+  process.env.AUTH_SECRET ||
+  process.env.NEXTAUTH_SECRET ||
+  "fallback-secret-replace-in-production-32chars";
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db, {
     usersTable: users,
@@ -19,7 +24,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     sessionsTable: sessions,
     verificationTokensTable: verificationTokens,
   }),
-  secret: process.env.AUTH_SECRET || "dev-secret-replace-in-production",
+  secret: authSecret,
   session: { strategy: "jwt" },
   pages: {
     signIn: "/auth/signin",
