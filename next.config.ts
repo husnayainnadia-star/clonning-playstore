@@ -1,8 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Matikan cacheComponents agar bisa pakai dynamic routes normal
-  cacheComponents: false,
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "play-lh.googleusercontent.com" },
@@ -13,6 +11,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "**.cloudinary.com" },
       { protocol: "https", hostname: "**.utfs.io" },
     ],
+    unoptimized: true,
   },
 };
 
