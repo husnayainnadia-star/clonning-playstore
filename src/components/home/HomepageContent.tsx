@@ -116,30 +116,33 @@ export default async function HomepageContent() {
 
   if (error || (popularApps.length === 0 && allCategories.length === 0)) {
     return (
-      <div className="text-center py-20">
-        <div className="w-16 h-16 bg-[#E6F4EF] rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg viewBox="0 0 24 24" className="w-8 h-8 fill-[#01875F]">
+      <div className="mx-auto max-w-lg py-20 text-center">
+        <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[#e6f4ef]">
+          <svg viewBox="0 0 24 24" className="h-10 w-10 fill-[#01875f]">
             <path d="M3 3h7v7H3zm11 0h7v7h-7zm0 11h7v7h-7zM3 14h7v7H3z" />
           </svg>
         </div>
-        <h2 className="text-xl font-semibold text-gray-700 mb-2">Welcome to Google Play</h2>
-        <p className="text-sm text-gray-500 max-w-sm mx-auto">
-          Apps are loading. If this persists, the database may still be setting up.
+        <h2 className="text-2xl font-medium text-[#202124]">Welcome to Google Play</h2>
+        <p className="mt-3 text-sm leading-6 text-[#5f6368]">
+          Apps are loading. If this persists, check your <code className="rounded bg-[#f1f3f4] px-1.5 py-0.5 text-xs">DATABASE_URL</code> and seed data.
         </p>
+        <Link href="/auth/signin" className="mt-6 inline-flex rounded-lg bg-[#01875f] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#056b4d]">
+          Sign in
+        </Link>
       </div>
     );
   }
 
   return (
-    <div>
-      {/* Banner */}
+    <div className="space-y-2">
       {allBanners.length > 0 && <BannerCarousel banners={allBanners} />}
 
-      {/* Categories */}
       {allCategories.length > 0 && (
-        <section className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Top categories</h2>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+        <section className="mb-10">
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <h2 className="text-[22px] font-medium leading-7 tracking-[-0.01em] text-[#202124]">Browse by category</h2>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6">
             {allCategories.map((cat) => {
               const meta = CATEGORY_ICONS[cat.slug] || { icon: Sparkles, color: "#01875F", bg: "#E6F4EF" };
               const Icon = meta.icon;
@@ -147,17 +150,12 @@ export default async function HomepageContent() {
                 <Link
                   key={cat.id}
                   href={`/category/${cat.slug}`}
-                  className="flex flex-col items-center gap-2 p-3 rounded-2xl hover:bg-white hover:shadow-sm transition-all group"
+                  className="group flex items-center gap-3 rounded-xl border border-[#e8eaed] bg-white px-3 py-3 transition-colors hover:bg-[#f8f9fa]"
                 >
-                  <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform"
-                    style={{ backgroundColor: meta.bg }}
-                  >
-                    <Icon className="h-6 w-6" style={{ color: meta.color }} />
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: meta.bg }}>
+                    <Icon className="h-5 w-5" style={{ color: meta.color }} />
                   </div>
-                  <span className="text-xs text-gray-700 font-medium text-center leading-tight">
-                    {cat.name}
-                  </span>
+                  <span className="min-w-0 truncate text-sm font-medium text-[#3c4043] group-hover:text-[#202124]">{cat.name}</span>
                 </Link>
               );
             })}
@@ -165,54 +163,52 @@ export default async function HomepageContent() {
         </section>
       )}
 
-      {/* Featured */}
       {featuredApps.length > 0 && (
-        <AppSection title="Featured" apps={featuredApps} viewAllHref="/charts" variant="scroll" />
+        <AppSection title="Featured apps" apps={featuredApps} viewAllHref="/charts" variant="scroll" />
       )}
 
-      {/* Popular */}
       {popularApps.length > 0 && (
         <AppSection title="Popular apps & games" apps={popularApps} viewAllHref="/charts" variant="scroll" />
       )}
 
-      {/* Top Charts */}
       {popularApps.length > 0 && (
-        <section className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Top charts</h2>
-            <Link href="/charts" className="text-sm text-[#01875F] font-medium hover:underline">See more</Link>
+        <section className="mb-10">
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <h2 className="text-[22px] font-medium leading-7 tracking-[-0.01em] text-[#202124]">Top charts</h2>
+            <Link href="/charts" className="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-sm font-medium text-[#01875f] hover:bg-[#e6f4ef]">
+              See more
+            </Link>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50">
+          <div className="overflow-hidden rounded-2xl border border-[#e8eaed] bg-white">
             {popularApps.slice(0, 5).map((app, i) => (
-              <div key={app.id} className="flex items-center gap-3 px-4">
-                <span className="text-sm font-bold text-gray-300 w-5 shrink-0">{i + 1}</span>
-                <Link href={`/app/${app.slug}`} className="flex-1 flex items-center gap-3 py-3 hover:opacity-80">
-                  <img src={app.icon} alt={app.name} className="w-12 h-12 rounded-xl object-cover" />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-gray-900 truncate">{app.name}</div>
-                    <div className="text-xs text-gray-500 truncate">{app.developer}</div>
+              <Link
+                key={app.id}
+                href={`/app/${app.slug}`}
+                className="flex items-center gap-4 px-4 py-3 transition-colors hover:bg-[#f8f9fa] [&+&]:border-t [&+&]:border-[#f1f3f4]"
+              >
+                <span className="w-5 shrink-0 text-sm text-[#5f6368]">{i + 1}</span>
+                <img src={app.icon} alt={app.name} className="h-14 w-14 shrink-0 rounded-[22%] bg-gray-100 object-cover shadow-[0_1px_2px_rgba(60,64,67,.3)]" />
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-sm font-medium text-[#202124]">{app.name}</div>
+                  <div className="truncate text-xs text-[#5f6368]">{app.developer}</div>
+                  <div className="mt-0.5 text-xs text-[#5f6368]">
+                    {Number(app.rating) > 0 ? `${Number(app.rating).toFixed(1)} ★` : "New"} {app.isFree ? "· Free" : `· $${app.price}`}
                   </div>
-                  <div className="text-xs text-[#01875F] font-medium shrink-0">
-                    {app.isFree ? "Free" : `$${app.price}`}
-                  </div>
-                </Link>
-              </div>
+                </div>
+              </Link>
             ))}
           </div>
         </section>
       )}
 
-      {/* Trending Games */}
       {trendingGames.length > 0 && (
         <AppSection title="Trending games" apps={trendingGames} viewAllHref="/category/games" variant="scroll" />
       )}
 
-      {/* Editor's Choice */}
       {editorApps.length > 0 && (
-        <AppSection title="Editor's Choice" apps={editorApps} viewAllHref="/editors-choice" variant="scroll" />
+        <AppSection title="Editor&apos;s Choice" apps={editorApps} viewAllHref="/editors-choice" variant="scroll" />
       )}
 
-      {/* New Releases */}
       {newApps.length > 0 && (
         <AppSection title="New releases" apps={newApps} viewAllHref="/new-releases" variant="scroll" />
       )}

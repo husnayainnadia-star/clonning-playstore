@@ -35,33 +35,28 @@ export default function BannerCarousel({ banners }: BannerCarouselProps) {
   const next = () => setCurrent((c) => (c + 1) % banners.length);
 
   return (
-    <div className="relative rounded-2xl overflow-hidden mb-8 group">
+    <div className="group relative mb-10 overflow-hidden rounded-2xl border border-[#e8eaed] bg-[#f8f9fa]">
       <div
-        className="flex transition-transform duration-500 ease-in-out"
+        className="flex transition-transform duration-500 ease-out"
         style={{ transform: `translateX(-${current * 100}%)` }}
       >
         {banners.map((banner) => {
           const href = banner.appId ? `/app/${banner.appId}` : banner.linkUrl || "#";
           return (
-            <Link
-              key={banner.id}
-              href={href}
-              className="relative shrink-0 w-full"
-            >
-              <div className="relative h-48 sm:h-64 md:h-72 bg-gradient-to-r from-[#01875F] to-[#4CAF50]">
+            <Link key={banner.id} href={href} className="relative w-full shrink-0">
+              <div className="relative h-[220px] bg-gradient-to-br from-[#0b57d0] via-[#01875f] to-[#34a853] sm:h-[280px] lg:h-[320px]">
                 <img
                   src={banner.imageUrl}
                   alt={banner.title}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = "none";
-                  }}
+                  className="h-full w-full object-cover"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 p-6 text-white">
-                  <h3 className="text-xl font-bold">{banner.title}</h3>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-6 text-white sm:p-8">
+                  <p className="mb-2 text-xs font-medium uppercase tracking-[0.12em] text-white/80">Featured</p>
+                  <h3 className="max-w-2xl text-2xl font-medium leading-tight sm:text-4xl">{banner.title}</h3>
                   {banner.subtitle && (
-                    <p className="text-sm text-white/80 mt-1">{banner.subtitle}</p>
+                    <p className="mt-2 max-w-2xl text-sm text-white/90 sm:text-base">{banner.subtitle}</p>
                   )}
                 </div>
               </div>
@@ -72,27 +67,19 @@ export default function BannerCarousel({ banners }: BannerCarouselProps) {
 
       {banners.length > 1 && (
         <>
-          <button
-            onClick={prev}
-            className="absolute left-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/30 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/50"
-          >
+          <button onClick={prev} aria-label="Previous banner" className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 text-[#3c4043] opacity-0 shadow transition-opacity hover:bg-white group-hover:opacity-100">
             <ChevronLeft className="h-5 w-5" />
           </button>
-          <button
-            onClick={next}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/30 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/50"
-          >
+          <button onClick={next} aria-label="Next banner" className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 text-[#3c4043] opacity-0 shadow transition-opacity hover:bg-white group-hover:opacity-100">
             <ChevronRight className="h-5 w-5" />
           </button>
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+          <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-1.5">
             {banners.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setCurrent(i)}
-                className={cn(
-                  "h-1.5 rounded-full transition-all",
-                  i === current ? "w-6 bg-white" : "w-1.5 bg-white/50"
-                )}
+                aria-label={`Go to banner ${i + 1}`}
+                className={cn("h-2 rounded-full transition-all", i === current ? "w-6 bg-white" : "w-2 bg-white/55 hover:bg-white/80")}
               />
             ))}
           </div>

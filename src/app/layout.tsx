@@ -22,14 +22,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gray-50 min-h-screen`}>
+      <body className={`${inter.className} min-h-screen bg-white text-[#202124] antialiased`}>
         <SessionProvider>
           <Header />
-          <div className="max-w-screen-xl mx-auto px-4 py-6 flex gap-6">
-            <Sidebar />
-            <main className="flex-1 min-w-0 pb-20 lg:pb-0">
-              {children}
-            </main>
+          <div className="app-shell px-4 sm:px-6 lg:px-8">
+            <div className="flex gap-8 pt-4 lg:pt-6">
+              <Sidebar />
+              <main className="min-w-0 flex-1 pb-24 lg:pb-10">
+                {children}
+              </main>
+            </div>
           </div>
           <Footer />
           <BottomNav />
