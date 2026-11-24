@@ -1,7 +1,6 @@
 import { db } from "@/lib/db";
 import { applications } from "@/lib/db/schema";
 import { desc, eq } from "drizzle-orm";
-import AppCard from "@/components/apps/AppCard";
 import Link from "next/link";
 
 interface PageProps {
@@ -46,47 +45,65 @@ export default async function ChartsPage({ searchParams }: PageProps) {
     { id: "new", label: "New" },
   ];
 
-  return (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Top Charts</h1>
+  const devices = ["Phone", "Tablet", "TV", "Chromebook", "Watch", "Car"];
 
-      {/* Tabs */}
-      <div className="flex gap-2 mb-6 border-b border-gray-100 pb-0">
+  return (
+    <div className="max-w-5xl">
+      <h1 className="text-[32px] font-medium leading-tight tracking-[-0.01em] text-[#202124]">Top charts</h1>
+
+      <div className="mt-5 flex flex-wrap gap-2">
+        {devices.map((device, i) => (
+          <span
+            key={device}
+            className={`inline-flex h-8 items-center rounded-full border px-4 text-sm ${
+              i === 0
+                ? "border-[#01875f] bg-[#e6f4ef] text-[#0b3d2e]"
+                : "border-[#dadce0] bg-white text-[#5f6368]"
+            }`}
+          >
+            {device}
+          </span>
+        ))}
+      </div>
+
+      <div className="mt-6 flex gap-2 border-b border-[#e8eaed]">
         {tabs.map((t) => (
           <Link
             key={t.id}
             href={`/charts?tab=${t.id}`}
-            className={`pb-3 px-2 text-sm font-medium transition-colors border-b-2 ${
-              tab === t.id
-                ? "border-[#01875F] text-[#01875F]"
-                : "border-transparent text-gray-600 hover:text-gray-900"
+            className={`relative px-3 pb-3 text-sm font-medium transition-colors ${
+              tab === t.id ? "text-[#01875f]" : "text-[#5f6368] hover:text-[#202124]"
             }`}
           >
             {t.label}
+            {tab === t.id && <span className="absolute inset-x-3 bottom-0 h-[3px] rounded-t-full bg-[#01875f]" />}
           </Link>
         ))}
       </div>
 
       {apps.length === 0 ? (
-        <div className="text-center py-16">
-          <p className="text-gray-500 text-sm">No apps yet. Configure your database and run the seed command.</p>
+        <div className="py-16 text-center">
+          <p className="text-sm text-[#5f6368]">No apps yet. Configure your database and run the seed command.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+        <div className="mt-2 divide-y divide-[#f1f3f4]">
           {apps.map((app, i) => (
             <Link
               key={app.id}
               href={`/app/${app.slug}`}
-              className="flex items-center gap-4 px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
+              className="flex items-center gap-4 rounded-xl px-2 py-3 transition-colors hover:bg-[#f8f9fa]"
             >
-              <span className="text-sm font-bold text-gray-300 w-7 text-center shrink-0">{i + 1}</span>
-              <img src={app.icon} alt={app.name} className="w-14 h-14 rounded-2xl object-cover shrink-0" />
-              <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium text-gray-900 truncate">{app.name}</div>
-                <div className="text-xs text-gray-500 truncate">{app.developer}</div>
-                <div className="text-xs text-gray-400 mt-0.5">{app.size}</div>
+              <span className="w-8 shrink-0 text-center text-sm text-[#5f6368]">{i + 1}</span>
+              <img src={app.icon} alt={app.name} className="h-16 w-16 shrink-0 rounded-[22%] bg-gray-100 object-cover shadow-[0_1px_2px_rgba(60,64,67,.3)]" />
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-sm font-medium text-[#202124]">{app.name}</div>
+                <div className="truncate text-xs text-[#5f6368]">{app.developer}</div>
+                <div className="mt-0.5 flex items-center gap-2 text-xs text-[#5f6368]">
+                  {Number(app.rating) > 0 && <span>{Number(app.rating).toFixed(1)} ★</span>}
+                  {app.size && <span>{app.size}</span>}
+                </div>
               </div>
-              <div className="text-sm font-medium text-[#01875F] shrink-0">
+              <div className="shrink-0 text-xs font-medium text-[#5f6368]">
                 {app.isFree ? "Free" : `$${app.price}`}
               </div>
             </Link>
